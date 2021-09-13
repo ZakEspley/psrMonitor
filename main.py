@@ -76,7 +76,7 @@ async def slideshow(request: Request):
 
 @app.get("/logout")
 async def route_logout_and_remove_cookie():
-    response = RedirectResponse(url="/")
+    response = RedirectResponse(url="/login")
     response.delete_cookie("Authorization")
     return response
 
