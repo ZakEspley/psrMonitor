@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"  href="../static/css/styles2.css">
+    <title>PSR Monitor Controller</title>
+</head>
+<body>
+    
+
+    <!-- This is genreated from https://www.theweather.com/widget/-->
+    <!-- If you change it you must change the CSS id descriptor to match -->
+    <div id="cont_15daf8987f9032c6fbce3b122c3f69e3"><script type="text/javascript" async src="https://www.theweather.com/wid_loader/15daf8987f9032c6fbce3b122c3f69e3"></script></div>
+    <iframe id="clock" scrolling="no" frameborder="no" clocktype="html5" style="overflow:hidden;border:0;margin:0;padding:0;width:450px;height:210px;"src="https://www.clocklink.com/html5embed.php?clock=048&timezone=PST&color=blue&size=450&Title=&Message=&Target=&From=2021,1,1,0,0,0&Color=blue"></iframe>
+    
+    <style>
+        body {
+            background: #42413b;
+        }
+        {% for timeslot in timeslots %}
+            {% set outerLoop = loop %}
+            @keyframes imageAnimation{{loop.index}} {
+                0% {
+                  opacity: 0;
+                }
+                {{(transition/duration*100)|round|int}}% {
+                  opacity: 1;
+                }
+                {{(1/timeslot.imgs|length*100)|round|int}}% {
+                  opacity: 1;
+                }
+                {{((1/timeslot.imgs|length+transition/duration)*100)|round|int}}% {
+                  opacity: 0;
+                }
+                100% {
+                  opacity: 0;
+                }
+              }
+            
+            .slideshow{{loop.index}} li span { 
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0px;
+                left: 0px;
+                color: transparent;
+                background-size: cover;
+                background-position: 50% 50%;
+                background-repeat: no-repeat;
+                opacity: 0;
+                z-index: -1;
+                animation: imageAnimation{{loop.index}} {{timeslot.imgs|length*duration}}s linear infinite 0s;
+                animation-play-state:paused;
+            }
+            {% for img in timeslot.imgs %}
+                .slideshow{{outerLoop.index}} li:nth-child({{loop.index}}) span { 
+                    background-image: url("{{ img }}");
+                    animation-delay: {{loop.index0 * duration}}s; 
+                }
+
+            {% endfor %}
+        {% endfor %}
+
+    </style>
+    
+    {% for timeslot in timeslots %}
+        <ul data-daytime="{{timeslot.Day}}{{timeslot.Time}}" class="slideshow{{loop.index}} slideshow">
+        {% set outerLoop = loop %}
+        {% for img in timeslot.imgs %}
+                <li><span data-daytime="{{timeslot.Day}}{{timeslot.Time}}" class="slide"></span></li>
+        {% endfor %}
+        </ul>
+    {% endfor %}
+    
+    <script>
+        var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+        var currentSlideTime = null;
+        function setSlides() {
+            let daytime = new Date();
+            let day = weekdays[daytime.getDay()];
+            let hours = daytime.getHours();
+            let minutes = daytime.getMinutes();
+            if (minutes < 30) {
+                minutes = "00";
+            } else {
+                minutes = "30"
+            }
+            let slideTime= day+hours+":"+minutes;
+            console.log("CURRENT TIME:");
+            console.log(slideTime);
+            if (slideTime != currentSlideTime){
+                if (currentSlideTime != null) {
+                    let slideshowToShutDown = document.querySelector("ul[data-daytime='"+currentSlideTime+"']");
+                    slideshowToShutDown.style.visibility = "hidden"
+                    let slidesToShutDown = document.querySelectorAll("span[data-daytime='"+currentSlideTime+"']");
+                    slidesToShutDown.forEach(slide => {
+                        slide.style.animationPlayState = "paused";
+                    })
+                }
+                currentSlideTime = slideTime;
+
+                let currentSlideShow = document.querySelector("ul[data-daytime='"+currentSlideTime+"']");
+                console.log(currentSlideShow)
+                currentSlideShow.style.visibility = "visible";
+                console.log(currentSlideShow)
+                let currentSlides = document.querySelectorAll("span[data-daytime='"+currentSlideTime+"']");
+                currentSlides.forEach(slide => {
+                    slide.style.animationPlayState = "running";
+                })
+            }
+        }
+        
+        setSlides();
+        setInterval(function() {
+            setSlides();
+        }, 60 * 1000);
+    </script>
+</body>
+    

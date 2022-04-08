@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block extraImports %}
+<script src="https://cdn.jsdelivr.net/npm/bulma-calendar@6.1.14/dist/js/bulma-calendar.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-calendar@6.1.14/dist/css/bulma-calendar.min.css">
+<script defer src="static/js/newSlideShowFormChecking.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="backgroundContainer">
+        <!-- <h1 class="is-size-1">Create New Slideshow</h1> -->
+        <div class="title is-1">Create New Slideshow</div>
+
+        <form id="form" action="/createNewSlideshow" method="post" enctype="application/json">
+            <div class="columns">
+                <div class="column">
+                    <div id="errors" class="has-text-danger-dark has-text-weight-semibold is-size-5"></div>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column is-one-third">
+                    <div class="field">
+                        <label for="" class="label is-large">Slideshow Name</label>
+                        <div class="control">
+                            <input id="title" name="slideShowName" type="text" class="input is-large" placeholder="New Slideshow">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="columns">
+                {% for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]%}
+                    <div class="column is-one-fifth">
+                        <div class="title">{{ day }}</div>
+                        <!-- <input type="time" name="mondayTime" data-display-mode="inline" data-is-range=true data-start-time="8:00" data-end-time="9:00" data-minute-steps=15> -->
+                        <div class="columns">
+                            <div class="column is-one-half is-flex is-justify-content-right is-align-items-center">
+                                <label for="">Start Time</label>
+                            </div>
+                            <div class="column is-one-half">
+                                <input id="{{ day|lower }}Time1" class="time" type="time" name="{{ day|lower }}Time1" id="">
+                            </div>
+                        </div>
+
+                        <div class="columns">
+                            <div class="column is-one-half is-flex is-justify-content-right is-align-items-center">
+                                <label for="">End Time</label>
+                            </div>
+                            <div class="column is-one-half">
+                                <input id="{{ day|lower }}Time2" class="time" type="time" name="{{ day|lower }}Time2" id="">
+                            </div>
+                        </div>
+                            
+                    </div>
+                {% endfor %}
+            </div>
+            <hr>
+            <h2 class="is-size-2">Select Slides</h2>
+
+            <ul class="gallery">
+                {% for img in imgs %}
+                <li class="image-item">
+                    <input class="img-cb" type="checkbox" id="cb{{ loop.index }}" value="{{ img }}" name="slideList[]"/>
+                        <label for="cb{{ loop.index }}" class="image-label">
+                            <figure class="image is-128x128"><img src="static/{{ img }}" alt=""></figure>
+                        </label>
+                </li>
+                {% endfor %}
+            <!-- This text input below is hidden from the user and is used
+                 to transfer the selected slides as a JSON string to the sever -->
+            <input type="text" name="slideList" id="slideList" hidden>
+            <div class="control">
+                <input type="submit" value="Submit" class="button">
+            </div>
+            
+        </form>       
+    </div>
+    
+{% endblock %}

@@ -4,11 +4,53 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet"  href="../static/css/styles2.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <title>PSR Monitor</title>
 </head>
 <body>
-    <form method="POST" action="/token">
-        <!-- <form action="/auth/cookie/login" method="post"> -->
+    <div id="background-image"></div>
+    <div id="background-overlay"></div>
+    <div id="login-form-container">
+        <div class="card is-centered" style="width:400px;">
+            <div class="card-image">
+                <p class="title is-size-1 has-text-centered has-text-weight-semibold" style="margin-top: 15px;">PSR</p>
+                <p class="subtitle is-size-3 has-text-centered">Monitor Controller</p>
+                <hr>
+            </div>
+               
+            <div class="card-content">
+                <!-- <div class="media">
+                    <p class="is-size-4">Login</p>
+                </div> -->
+                <form action="/token" method="post">
+                    <div class="field">
+                        <p class="control has-icons-left has-icons-right">
+                        <input class="input" type="text" placeholder="Username" name="username">
+                        <span class="icon is-small is-left">
+                            <span class="material-icons">account_box</span>
+                        </span>
+                        </p>
+                    </div>
+                    <div class="field">
+                        <p class="control has-icons-left">
+                        <input class="input" type="password" placeholder="Password" name="password">
+                        <span class="icon is-small is-left">
+                            <span class="material-icons">lock</span>
+                        </span>
+                        </p>
+                    </div>
+                    <div class="field">
+                        <input type="submit" class="button is-black is-fullwidth is-size-4" value="Login">
+                    </div>
+                    </div>
+                </form>
+        </div>
+    </div>
+    <!--<form method="POST" action="/token">
+        <-- <form action="/auth/cookie/login" method="post"> ->
         <span>
             <label for="username">Username</label>
             <input type="text" name="username" id="username">
@@ -20,6 +62,6 @@
         <span>
             <input type="submit" value="Submit">
         </span>
-    </form>
+    </form> -->
 </body>
 </html>

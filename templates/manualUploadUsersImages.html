@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block extraImports %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script defer src="static/js/updateFilename.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.1/papaparse.min.js" integrity="sha512-EbdJQSugx0nVWrtyK3JdQQ/03mS3Q1UiAhRtErbwl1YL/+e2hZdlIcSURxxh7WXHTzn83sjlh2rysACoJGfb6g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+
+{% block content %}
+<div class="backgroundContainer content">
+    <p class="title">
+        Manually Add PSR Host Images
+    </p>
+    <p>
+        Use this page to upload (in a batch) all of the images for each TA or LA in the system.
+        The name of the images need to match the email address attached to the TA or LA.
+        This will simply resize the file too 700X700 px. This will result in distortions if the images don't already have an aspect ratio of 1:1.
+    </p>
+    <hr>
+    <p class="is-size-4">Select Image(s) to upload.</p>
+    <p id="errors" class="has-text-danger-dark has-text-weight-semibold is-size-5"></p>
+    <form action="/manuallyaddHostsImages" method="post" enctype="multipart/form-data" id="form">
+        <div class="field">
+            <div class="file is-large has-name" id="fileUpload">
+                <label class="file-label">
+                  <input class="file-input" type="file" name="images" accept="image/*" id="file" required multiple>
+                  <span class="file-cta">
+                    <span class="icon is-left">
+                        <span class="material-icons is-left">
+                            file_upload
+                        </span>
+                    </span>
+                    <span class="file-label">
+                      Select File(s)...
+                    </span>
+                  </span>
+                  <span class="file-name">
+                    Selected File(s)
+                  </span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="field">
+            <div class="control"><input class="button is-primary" type="submit" value="Upload File"></div>
+        </div>
+    </form>
+    
+
+</div>
+
+
+{% endblock %}

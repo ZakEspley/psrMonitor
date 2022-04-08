@@ -1,16 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="static/css/styles2.css">
-</head>
-<body>
-    <!-- This is genreated from https://www.theweather.com/widget/-->
-    <!-- If you change it you must change the CSS id descriptor to match -->
-    <h1>Homepage</h1>
-    <h3>Start making slideshows</h3>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block extraImports %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!-- <script defer src="static/js/updateFilename.js"></script> -->
+<!-- <script defer src="static/js/addHostsFormChecking.js"></script> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.1/papaparse.min.js" integrity="sha512-EbdJQSugx0nVWrtyK3JdQQ/03mS3Q1UiAhRtErbwl1YL/+e2hZdlIcSURxxh7WXHTzn83sjlh2rysACoJGfb6g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+{% endblock %}
+
+{% block content %}
+<div class="backgroundContainer content">
+    <p class="title">
+        PSR Monitor Controller
+    </p>
+    <p class="subtitle">Change what is displayed to the students</p>
+    <hr>
+    
+    <p>Use this website to control what is displayed on the PSR Monitors. The main steps for making a slide show is the the following</p>
+    <ol>
+        <li>TA's and LA's are referred to as "hosts". Add all the hosts for the quarter by uploading a CSV file that matches the template shown in teh "Add Hosts" page.</li>
+        <li>Once all the accounts for the hosts have been added, you need to upload a picture for each host. To do this, you should have a picture of the host that contains only the one individual with a little bit of space around their face. The file name should be the host's email address you used when making the profile. The images will be cropped to a 500px square around their face.</li>
+        <li>Verify that the images worked out. You might find that the algorithm did a bad job cropping, didn't find a face, found too many faces, or couldn't find an account. Fix any problems that occurred by manually uploading photos for the hosts. </li>
+        <li>Create the slide show. To do this, you will need to upload a CSV file with all of the times and people in the each timeslot for the PSR.</li>
+        <li>Add any advertising slides. If the students or department wants to advertise an upcoming event you can add it in teh "Add Slides" page.</li>
+    </ol>
+    
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block extraImports %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script defer src="static/js/updateFilename.js"></script>
+<!-- <script defer src="static/js/addHostsFormChecking.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.1/papaparse.min.js" integrity="sha512-EbdJQSugx0nVWrtyK3JdQQ/03mS3Q1UiAhRtErbwl1YL/+e2hZdlIcSURxxh7WXHTzn83sjlh2rysACoJGfb6g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+
+{% block content %}
+<div class="backgroundContainer content">
+    <p class="title">
+        Uploaded Results
+    </p>
+    <p>
+        Review the outcome of all of the images.
+    </p>
+    <hr>
+
+    {% if noProfile|length > 0 %}
+        <section class="hero is-danger">
+            <div class="hero-body">
+            <p class="title">
+                Missing Profiles
+            </p>
+            <p class="subtitle">
+                The following files did not have a matching account.
+            </p>
+            </div>
+        </section>
+        <table class="table is-striped is-hoverable">
+            <tr>
+                <th>Filename</th>
+            </tr>
+            {% for filename in noProfile %}
+            <tr>
+                <td>{{ filename }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+    {% if failure|length > 0 %}
+        <section class="hero is-warning">
+            <div class="hero-body">
+            <p class="title">
+                Facial Detection Issue
+            </p>
+            <p class="subtitle">
+                These files either contained multiple faces or no faces.
+            </p>
+            </div>
+        </section>
+        <table class="table is-striped is-hoverable">
+            <tr>
+                <th>Email</th>
+                <th>Name</th>
+                <th>Pronouns</th>
+                <th>Class</th>
+                <th>Position</th>
+            </tr>
+            {% for profile in failure %}
+            <tr>
+                <td>{{ profile['Email'] }}</td>
+                <td>{{ profile['First Name'] }} {{ profile['Last Name'] }}</td>
+                <td>{{ profile['Pronouns'] }}</td>
+                <td>{{ profile['Class'] }}</td>
+                <td>{{ profile['Position'] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+    {% if success|length > 0 %}
+        <section class="hero is-success" style="margin-bottom: 0.5em;">
+            <div class="hero-body">
+            <p class="title">
+                Success Facial Detection
+            </p>
+            <p class="subtitle">
+                These images had successful facial detections. Please make sure they are cropped well.
+            </p>
+            </div>
+        </section>
+            {% for host in success %}
+                {% if loop.index0%3 == 0 %}
+                <div class="columns is-multiline">
+                {% endif %}
+                    <div class="column is-4">
+                        <div class="card">
+                            <div class="card-image">
+                                <figure class="image">
+                                    <img src="static/{{ host['img_path'] }}" alt="Placeholder image" style="margin-top:1em;">
+                                </figure>
+                            </div>
+                            <div class="card-content">
+                                <div class="media">
+                                    <!-- <div class="media-left">
+                                    <figure class="image is-48x48">
+                                        <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+                                    </figure>
+                                    </div> -->
+                                    <div class="media-content">
+                                    {% if host['Pronouns']=="NA" %}
+                                        <p class="title is-4">{{ host["First Name"] }} {{  host['Last Name']  }}</p>
+                                    {% else %}
+                                    <p class="title is-4">{{ host["First Name"] }} {{  host['Last Name']  }} ({{ host["Pronouns"] }})</p>
+                                    {% endif %}
+                                        <p class="subtitle is-5">{{ host["Class"] }} {{ host["Position"] }} </p>
+                                    <p class="is-6">{{ host["Email"] }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% if loop.index0%3 == 2 or loop.index == success|length %}
+                </div>
+                {% endif %}  
+            {% endfor %}
+    {% endif %}
+   
+    
+        
+    
+    
+</div>
+
+
+{% endblock %}

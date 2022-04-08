@@ -1,3 +1,14 @@
 {
-    "python.pythonPath": "/home/zak/anaconda3/envs/psr/bin/python"
+    "python.pythonPath": "/home/zak/anaconda3/envs/psr/bin/python",
+    "python.languageServer": "Pylance",
+    "python.linting.pylintEnabled": false,
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingModuleSource": "none"
+    },
+    "python.analysis.extraPaths": [
+        "",
+        "/home/zak/.vscode/extensions/joedevivo.vscode-circuitpython-0.1.15/stubs",
+        "/home/zak/.config/Code/User/globalStorage/joedevivo.vscode-circuitpython/bundle/20220405/adafruit-circuitpython-bundle-py-20220405/lib"
+    ],
+    "circuitpython.board.version": null
 }

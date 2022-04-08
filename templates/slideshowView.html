@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block extraImports %}
+
+{% endblock %}
+
+{% block content %}
+<p class="title">
+    {{ slideshow.title }} Slide Show
+</p>
+<hr>
+<div class="is-size-3">
+    Display Times
+</div>
+<div class="columns">
+    {% if slideshow.mondayTime1|length %}
+        <div class="title">
+            Monday
+        </div>
+        <div class="columns">
+            <div class="column is-one-half is-flex is-justify-content-right is-align-items-center">
+                <p>Start Time:</p>
+            </div>
+            <div class="column is-one-half">
+                <p>{{ slideshow.mondayTime1 }}</p>
+            </div>
+        </div>
+
+        <div class="columns">
+            <div class="column is-one-half is-flex is-justify-content-right is-align-items-center">
+                <p>End Time</p>
+            </div>
+            <div class="column is-one-half">
+                <p>{{ slideshow.mondayTime2 }}</p>
+            </div>
+        </div>
+    {% endif %}
+    <!-- Tuesday -->
+    {% if slideshow.tuesdayTime1|length %}
+        <div class="title">
+            Tuesday
+        </div>
+        <div class="columns">
+            <div class="column is-one-half is-flex is-justify-content-right is-align-items-center">
+                <p>Start Time:</p>
+            </div>
+            <div class="column is-one-half">
+                <p>{{ slideshow.tuesdayTime1 }}</p>
+            </div>
+        </div>
+
+        <div class="columns">
+            <div class="column is-one-half is-flex is-justify-content-right is-align-items-center">
+                <p>End Time</p>
+            </div>
+            <div class="column is-one-half">
+                <p>{{ slideshow.tuesdayTime2 }}</p>
+            </div>
+        </div>
+    {% endif %}
+    <!-- Wednesday -->
+    {% if slideshow.wednesdayTime1|length %}
+        <div class="title">
+            Wednesday
+        </div>
+        <div class="columns">
+            <div class="column is-one-half is-flex is-justify-content-right is-align-items-center">
+                <p>Start Time:</p>
+            </div>
+            <div class="column is-one-half">
+                <p>{{ slideshow.wednesdayTime1 }}</p>
+            </div>
+        </div>
+
+        <div class="columns">
+            <div class="column is-one-half is-flex is-justify-content-right is-align-items-center">
+                <p>End Time</p>
+            </div>
+            <div class="column is-one-half">
+                <p>{{ slideshow.wednesdayTime2 }}</p>
+            </div>
+        </div>
+    {% endif %}
+    <!-- Thursday -->
+    {% if slideshow.thursdayTime1|length %}
+        <div class="title">
+            Thursday
+        </div>
+        <div class="columns">
+            <div class="column is-one-half is-flex is-justify-content-right is-align-items-center">
+                <p>Start Time:</p>
+            </div>
+            <div class="column is-one-half">
+                <p>{{ slideshow.thursdayTime1 }}</p>
+            </div>
+        </div>
+
+        <div class="columns">
+            <div class="column is-one-half is-flex is-justify-content-right is-align-items-center">
+                <p>End Time</p>
+            </div>
+            <div class="column is-one-half">
+                <p>{{ slideshow.thursdayTime2 }}</p>
+            </div>
+        </div>
+    {% endif %}
+    <!-- Friday -->
+    {% if slideshow.FridayTime1|length %}
+        <div class="title">
+            Friday
+        </div>
+        <div class="columns">
+            <div class="column is-one-half is-flex is-justify-content-right is-align-items-center">
+                <p>Start Time:</p>
+            </div>
+            <div class="column is-one-half">
+                <p>{{ slideshow.fridayTime1 }}</p>
+            </div>
+        </div>
+
+        <div class="columns">
+            <div class="column is-one-half is-flex is-justify-content-right is-align-items-center">
+                <p>End Time</p>
+            </div>
+            <div class="column is-one-half">
+                <p>{{ slideshow.fridayTime2 }}</p>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}
