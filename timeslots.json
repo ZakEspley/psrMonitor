@@ -1,0 +1,173 @@
+{
+  "_id": {
+    "$oid": "61db6302a693d66bc9fd9f1c"
+  },
+  "Day": "Monday",
+  "Time": "9:00",
+  "Hosts": {
+    "TAs": [
+      {
+        "_id": {
+          "$oid": "619223b1ecf69107a1b67376"
+        },
+        "Email": "zespley@physics.ucsb.edu",
+        "First Name": "Zak",
+        "Last Name": "Espley",
+        "Pronouns": "He/Him",
+        "Class": "128AL",
+        "Position": "TA",
+        "filename": "zespley@physics.ucsb.edu.png",
+        "img_path": "imgs/hosts/zespley@physics.ucsb.edu.png",
+        "timeslots": [
+          {
+            "firstslot": {
+              "Day": "Monday",
+              "Time": "8:00"
+            },
+            "lastslot": {
+              "Day": "Monday",
+              "Time": "9:00"
+            },
+            "slots": [
+              [
+                {
+                  "Day": "Monday",
+                  "Time": "8:00"
+                },
+                {
+                  "Day": "Monday",
+                  "Time": "8:30"
+                },
+                {
+                  "Day": "Monday",
+                  "Time": "9:00"
+                }
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "LAs": [
+      {
+        "_id": {
+          "$oid": "619223b1ecf69107a1b67375"
+        },
+        "Email": "rshirin@physics.ucsb.edu",
+        "First Name": "Raffi",
+        "Last Name": "Shirinian",
+        "Pronouns": "He/Him",
+        "Class": "Phys 110A",
+        "Position": "LA",
+        "filename": "rshirin@physics.ucsb.edu.png",
+        "img_path": "imgs/hosts/rshirin@physics.ucsb.edu.png",
+        "timeslots": [
+          {
+            "firstslot": {
+              "Day": "Monday",
+              "Time": "8:00"
+            },
+            "lastslot": {
+              "Day": "Monday",
+              "Time": "9:00"
+            },
+            "slots": [
+              [
+                {
+                  "Day": "Monday",
+                  "Time": "8:00"
+                },
+                {
+                  "Day": "Monday",
+                  "Time": "8:30"
+                },
+                {
+                  "Day": "Monday",
+                  "Time": "9:00"
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$oid": "61d9d42ece605f86cb659287"
+        },
+        "Email": "pkottapalli@ucsb.edu",
+        "First Name": "PK",
+        "Last Name": "Kottapalli",
+        "Pronouns": "NA",
+        "Class": "Phys 115A",
+        "Position": "LA",
+        "filename": "pkottapalli@ucsb.edu.png",
+        "img_path": "imgs/hosts/pkottapalli@ucsb.edu.png",
+        "timeslots": [
+          {
+            "firstslot": {
+              "Day": "Monday",
+              "Time": "8:30"
+            },
+            "lastslot": {
+              "Day": "Monday",
+              "Time": "9:00"
+            },
+            "slots": [
+              [
+                {
+                  "Day": "Monday",
+                  "Time": "8:30"
+                },
+                {
+                  "Day": "Monday",
+                  "Time": "9:00"
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$oid": "61d9d42ece605f86cb659283"
+        },
+        "Email": "yael@ucsb.edu",
+        "First Name": "Yael",
+        "Last Name": "Brynjegard-Bialik",
+        "Pronouns": "NA",
+        "Class": "Phys 22",
+        "Position": "LA",
+        "filename": "yael@ucsb.edu.png",
+        "img_path": "imgs/hosts/yael@ucsb.edu.png",
+        "timeslots": [
+          {
+            "firstslot": {
+              "Day": "Monday",
+              "Time": "8:00"
+            },
+            "lastslot": {
+              "Day": "Monday",
+              "Time": "9:00"
+            },
+            "slots": [
+              [
+                {
+                  "Day": "Monday",
+                  "Time": "8:00"
+                },
+                {
+                  "Day": "Monday",
+                  "Time": "8:30"
+                },
+                {
+                  "Day": "Monday",
+                  "Time": "9:00"
+                }
+              ]
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
