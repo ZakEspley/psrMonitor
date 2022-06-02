@@ -74,9 +74,12 @@
         </ul>
     {% endfor %}
     
+    <img id="defaultImg" src="/static/imgs/default.png" alt="" height="100%" width="100%">
+
     <script>
         var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
         var currentSlideTime = null;
+        var defaultImg = document.getElementById("defaultImg")
         function setSlides() {
             let daytime = new Date();
             let day = weekdays[daytime.getDay()];
@@ -103,12 +106,18 @@
 
                 let currentSlideShow = document.querySelector("ul[data-daytime='"+currentSlideTime+"']");
                 console.log(currentSlideShow)
-                currentSlideShow.style.visibility = "visible";
-                console.log(currentSlideShow)
-                let currentSlides = document.querySelectorAll("span[data-daytime='"+currentSlideTime+"']");
-                currentSlides.forEach(slide => {
-                    slide.style.animationPlayState = "running";
-                })
+                if (currentSlideShow != null) {
+                    defaultImg.style.visibility = "hidden";
+                    currentSlideShow.style.visibility = "visible";
+                    console.log(currentSlideShow)
+                    let currentSlides = document.querySelectorAll("span[data-daytime='"+currentSlideTime+"']");
+                    currentSlides.forEach(slide => {
+                        slide.style.animationPlayState = "running";
+                    })
+                } else {
+                    defaultImg.style.visibility = "visible";
+                }
+                
             }
         }
         
