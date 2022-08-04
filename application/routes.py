@@ -219,8 +219,9 @@ def user(user_id):
                 db.session.commit()
             else:
                 print("Flashing Message")
-                flash("This is the last admin! <br/> Promote someone else to admin before removing this one.")
-            redirect(url_for("main.adminProfil", user=user, form=form))
+                flash("This is the last admin!") 
+                flash("Promote someone else to admin before removing this one.")
+            redirect(url_for("main.adminProfile", user=user, form=form))
         return redirect(url_for("main.adminProfile", user=user, form=form, startingHour=startingHour, endingHour=endingHour+1, eventslist=events))
     
 @main.route("/uploadTimeslots", methods=["GET", "POST"])
