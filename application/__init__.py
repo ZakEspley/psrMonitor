@@ -23,7 +23,11 @@ def create_app(test_config=None):
         MAX_IMAGE_SIZE = 1000,
         PERMANENT_SESSION_LIFETIME = timedelta(minutes=5)
     )
+    from werkzeug.middleware.proxy_fix import ProxyFix
 
+    app.wsgi_app = ProxyFix(
+        app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
+    )
     # if test_config is None:
     #     # load the instance config, if it exists, when not testing
     #     app.config.from_pyfile('config.py', silent=True)
