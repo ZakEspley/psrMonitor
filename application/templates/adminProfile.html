@@ -4,6 +4,7 @@
 {% if not user.admin %}
 <link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
 <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
+<script src="../static/js/bulmaModal.js"></script>
 {% endif %}
 
 {% endblock %}
@@ -272,7 +273,7 @@
                     backgroundColor: "#3a86ff"
                 },
                 {
-                    id:"OtherCal",
+                    id:"Othercal",
                     name:"Other",
                     backgroundColor: "#ff006e"
                 }
@@ -347,54 +348,38 @@
         <button class="modal-close is-large" aria-label="close"></button>
     </div>
 
-    <script>
+    {% endif %}
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // Functions to open and close a modal
-            function openModal($el) {
-              $el.classList.add('is-active');
-            }
-          
-            function closeModal($el) {
-              $el.classList.remove('is-active');
-            }
-          
-            function closeAllModals() {
-              (document.querySelectorAll('.modal') || []).forEach(($modal) => {
-                closeModal($modal);
-              });
-            }
-          
-            // Add a click event on buttons to open a specific modal
-            (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
-              const modal = $trigger.dataset.target;
-              const $target = document.getElementById(modal);
-          
-              $trigger.addEventListener('click', () => {
-                openModal($target);
-              });
-            });
-          
-            // Add a click event on various child elements to close the parent modal
-            (document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button, .close-button') || []).forEach(($close) => {
-              const $target = $close.closest('.modal');
-          
-              $close.addEventListener('click', () => {
-                closeModal($target);
-              });
-            });
-          
-            // Add a keyboard event to close all modals
-            document.addEventListener('keydown', (event) => {
-              const e = event || window.event;
-          
-              if (e.keyCode === 27) { // Escape key
-                closeAllModals();
-              }
-            });
-          });
-    </script>
-
+    {% if user.admin %}
+        <hr>
+        <div class="box">
+            <p class="is-size-3">
+                <strong>Administrative</strong>
+            </p>
+                <p class="is-size-4">Remove Admin Status</p>
+                <p>
+                    Caution: Clicking this button will make this user a normal user.
+                </p>
+                <button id="adminButton" class="button is-danger js-modal-trigger" data-target="admin-modal">
+                    Remove Admin
+                </button>
+        </div>
+        <div id="admin-modal" class="modal">
+            <div class="modal-background"></div>
+                <div class="modal-content">
+                    <form id="adminForm" class="box" action="{{url_for(request.endpoint, **request.view_args)}}" method="post">
+                        {{ form.csrf_token }}
+                        <p class="is-size-4 mb-6">Are you sure you want {{user.firstName}} {{user.lastName}} to be an admin?</p>
+                        <div class="buttons is-centered">
+                            {{form.action(value="remove-admin")}}
+                            <input type="submit" class="button is-danger is-medium" value="Yes">
+                            <div class="button is-primary close-button is-medium">No</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <button class="modal-close is-large" aria-label="close"></button>
+        </div>
     {% endif %}
 
 </div>

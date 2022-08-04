@@ -7,10 +7,28 @@
     <link rel="stylesheet"  href="../static/css/styles2.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+        rel="stylesheet">
+    <script src="../static/js/bulmaModal.js"></script>
     <title>PSR Monitor</title>
 </head>
 <body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div id="messages" class="modal is-active">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div class="box">
+                    {% for message in messages %}
+                    <p class="is-size-4 has-text-centered">{{ message }}</p>
+                    {% endfor %}
+                </div>
+                    
+                
+            </div>
+            <button class="modal-close is-large" aria-label="close"></button>
+            </div>
+        {% endif %}
+    {% endwith %}
     <div id="background-image"></div>
     <div id="background-overlay"></div>
     <div id="login-form-container">
@@ -22,26 +40,9 @@
             </div>
                
             <div class="card-content">
-                <!-- <div class="media">
-                    <p class="is-size-4">Login</p>
-                </div> -->
                 <a href="/login"><button class="button is-large is-primary is-fullwidth">Login with UCSB Google</button></a>
             </div>
         </div>
-    </div>
-    <!--<form method="POST" action="/token">
-        <-- <form action="/auth/cookie/login" method="post"> ->
-        <span>
-            <label for="username">Username</label>
-            <input type="text" name="username" id="username">
-        </span>
-        <span>
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password">
-        </span>
-        <span>
-            <input type="submit" value="Submit">
-        </span>
-    </form> -->
+    </div
 </body>
 </html>

@@ -20,8 +20,8 @@ def create_app(test_config=None):
         GOOGLE_CLIENT_SECRET = clientSecrets['web']['client_secret'],
         GOOGLE_DISCOVERY_URI = clientSecrets['web']['auth_uri'],
         PROFILE_SIZE = (700,700),
-        MAX_IMAGE_SIZE = 1000
-        # PERMANENT_SESSION_LIFETIME = timedelta(minutes=1)
+        MAX_IMAGE_SIZE = 1000,
+        PERMANENT_SESSION_LIFETIME = timedelta(minutes=5)
     )
 
     # if test_config is None:

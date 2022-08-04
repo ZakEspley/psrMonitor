@@ -1,7 +1,7 @@
 from calendar import weekday
 import email
 from time import time
-from flask import Blueprint, render_template, session, redirect, url_for, abort, flash, request, current_app, jsonify
+from flask import Blueprint, render_template, session, redirect, url_for, abort, flash, request, current_app, jsonify, Markup
 from flask_login import login_required, login_user, logout_user, current_user
 from sqlalchemy import values
 from .extensions import db, oauth, login_manager
@@ -16,6 +16,10 @@ import os
 
 main = Blueprint("main", __name__)
 login_manager.login_view = "main.index"
+login_manager.login_message = ("Login expired. Please login again.")
+login_manager.refresh_view = "main.index"
+login_manager.needs_refresh_message = ("Login expired. Please login again.")
+
 
 def admin_required(f):
     @wraps(f)
@@ -31,10 +35,12 @@ def admin_required(f):
 def load_user(id):
     return User.query.get(int(id))
 
-def makeCalendarEventsList(timeslots, user=None):
+def makeCalendarEventsList(timeslots, initial_user=None):
     events = []
     startingHour = datetime.time(23,59)
     endingHour = datetime.time(0,0)
+    print("LENGTHS")
+    print(len(timeslots))
     for ts in timeslots:
         if ts.startTime < startingHour:
             startingHour = ts.startTime
@@ -49,11 +55,13 @@ def makeCalendarEventsList(timeslots, user=None):
         else:
             day = ts.weekday
         
-        if user is None:
+        if initial_user is None:
             for user in ts.users:
                 # If a user is not a TA or LA the shouldn't be assigned
                 # so they get thrown into the "Other" calendar that will
                 # be red to highlight the mistake.
+                print(ts.id)
+                print(f"\r\nUSER:{user.firstName}")
                 if user.position not in ["LA", "TA"]:
                     calendarId = "Othercal"
                 else:
@@ -72,18 +80,18 @@ def makeCalendarEventsList(timeslots, user=None):
             # If a user is not a TA or LA the shouldn't be assigned
             # so they get thrown into the "Other" calendar that will
             # be red to highlight the mistake.
-            if user.position not in ["LA", "TA"]:
+            if initial_user.position not in ["LA", "TA"]:
                 calendarId = "Othercal"
             else:
-                calendarId = f"{user.position}cal"
+                calendarId = f"{initial_user.position}cal"
             # Add all the events to the calendar to be displayed.
             event = {
                 "start": f"2022-03-{21+day}T{ts.startTime}",
                 "end": f"2022-03-{21+day}T{ts.endTime}",
                 "id": f"Event{len(events)+1}",
                 "calendarId": calendarId,
-                "title": f"{user.firstName[0]}{user.lastName[0]}",
-                "body": f"{user.firstName} {user.lastName}<br>{user.email}<br>{user.position} - {user.physicsClass}"
+                "title": f"{initial_user.firstName[0]}{initial_user.lastName[0]}",
+                "body": f"{initial_user.firstName} {initial_user.lastName}<br>{initial_user.email}<br>{initial_user.position} - {initial_user.physicsClass}"
             }
             events.append(event)
     return (events, startingHour.hour, endingHour.hour)
@@ -157,11 +165,11 @@ def addUsers():
                 db.session.add(user)
             users.append(user)
             db.session.commit()
-        return render_template("users.html", users=users, review=True)
+        return redirect(url_for("main.users", users=users, review=True))
 
 @main.route("/users")
-@admin_required
 @login_required
+@admin_required
 def users():
     users = User.query.all()
     return render_template("users.html", users=users, review=False)
@@ -174,7 +182,7 @@ def user(user_id):
     user = User.query.get(user_id)
     events, startingHour, endingHour = makeCalendarEventsList(user.timeslots, user)
     if request.method == "GET":
-        return render_template("adminProfile.html", form=form, user=user, startingHour=startingHour, endingHour=endingHour, eventslist=events)
+        return render_template("adminProfile.html", form=form, user=user, startingHour=startingHour, endingHour=endingHour+1, eventslist=events)
     elif request.method == "POST":
         for att, value in form.data.items():
             if value is not None and att!="csrf_token" and att != "profilePic":
@@ -190,17 +198,30 @@ def user(user_id):
                 user.profilePic = True
                 db.session.commit()
             elif faces==0:
-                flash("No faces found in this image! <br> If this is in error please contact the PSR Coordinator for help or try a different image.")
+                flash("No faces found in this image!")
+                flash("If this is in error please contact the PSR Coordinator for help or try a different image.")
             else:
-                flash("Multiple faces found in this image! <br> Your image must be a headshot of JUST you. <br> If this is in error please contact the PSR Coordinator for help or try a different image.")
+                flash("Multiple faces found in this image!")
+                flash("Your image must be a headshot of JUST you.")
+                flash("If this is in error please contact the PSR Coordinator for help or try a different image.")
         if form.data["action"] == "admin":
             user.admin = True
             db.session.commit()
         elif form.data["action"] == "delete":
             db.session.delete(user)
             db.session.commit()
+            
             return redirect(url_for("main.users"))
-        return render_template("adminProfile.html", user=user, form=form, startingHour=startingHour, endingHour=endingHour, eventslist=events)
+        elif form.data["action"] == "remove-admin":
+            admins = User.query.filter_by(admin=True).all()
+            if len(admins) <= 2:
+                user.admin = False
+                db.session.commit()
+            else:
+                print("Flashing Message")
+                flash("This is the last admin! <br/> Promote someone else to admin before removing this one.")
+            redirect(url_for("main.adminProfil", user=user, form=form))
+        return redirect(url_for("main.adminProfile", user=user, form=form, startingHour=startingHour, endingHour=endingHour+1, eventslist=events))
     
 @main.route("/uploadTimeslots", methods=["GET", "POST"])
 @login_required
@@ -386,7 +407,7 @@ def uploadTimeslots():
         for time in badTimes:
             flash(f"Sorry, I don't understand the time: {time}")
         
-        return render_template("schedule.html", eventsList=events, startingHour=startingHour.hour, endingHour=endingHour.hour+1)
+        return redirect(url_for("main.schedule", eventsList=events, startingHour=startingHour, endingHour=endingHour+1))
 
 @main.get("/manuallyAddHostsImages")
 def get_manually_add_host_image():
@@ -406,11 +427,11 @@ def post_make_slideshow():
     #TODO: Potentially make slideshow making function
     pass
 
-@main.get("/addSlides")
-def get_add_slides():
-    #return render_template()
-    #TODO: make Template and make it functional
-    pass
+# @main.get("/addSlides")
+# def get_add_slides():
+#     #return render_template()
+#     #TODO: make Template and make it functional
+#     pass
 
 
 @main.route('/authorized')
@@ -426,7 +447,7 @@ def authorized():
         return abort(401)
     # session['profile'] = user
     # session.permanent = True
-    login_user(local_user, remember=True, duration=datetime.timedelta(minutes=1))
+    login_user(local_user)
     if local_user.admin:
         return redirect('/adminProfile')
     return redirect('/profile')
@@ -456,7 +477,7 @@ def profile():
     form = ProfileForm()
     if request.method == "GET":
         events, startingHour, endingHour = makeCalendarEventsList(current_user.timeslots, current_user)
-        return render_template("profile.html", user=current_user, form=form, eventslist=events, startingHour=startingHour, endingHour=endingHour)
+        return render_template("profile.html", user=current_user, form=form, eventslist=events, startingHour=startingHour, endingHour=endingHour+1)
     elif request.method == "POST":
         user = User.query.filter_by(email=current_user.email).first()
         for att, value in form.data.items():
@@ -473,10 +494,13 @@ def profile():
                 user.profilePic = True
                 db.session.commit()
             elif faces==0:
-                flash("No faces found in this image! <br> If this is in error please contact the PSR Coordinator for help or try a different image.")
+                flash("No faces found in this image!")
+                flash("If this is in error please contact the PSR Coordinator for help or try a different image.")
             else:
-                flash("Multiple faces found in this image! <br> Your image must be a headshot of JUST you. <br> If this is in error please contact the PSR Coordinator for help or try a different image.")
-        return render_template("profile.html", user=user, form=form)
+                flash("Multiple faces found in this image!")
+                flash("Your image must be a headshot of JUST you.")
+                flash("If this is in error please contact the PSR Coordinator for help or try a different image.")
+        return redirect(url_for("main.profile", user=user, form=form))
 
 @main.route("/adminProfile", methods=["GET", "POST"])
 @login_required
@@ -501,10 +525,22 @@ def adminProfile():
                 user.profilePic = True
                 db.session.commit()
             elif faces==0:
-                flash("No faces found in this image! <br> If this is in error please contact the PSR Coordinator for help or try a different image.")
+                flash("No faces found in this image!")
+                flash("If this is in error please contact the PSR Coordinator for help or try a different image.")
             else:
-                flash("Multiple faces found in this image! <br> Your image must be a headshot of JUST you. <br> If this is in error please contact the PSR Coordinator for help or try a different image.")
-        return render_template("adminProfile.html", user=user, form=form)
+                flash("Multiple faces found in this image!")
+                flash("Your image must be a headshot of JUST you.")
+                flash("If this is in error please contact the PSR Coordinator for help or try a different image.")
+        
+        if form.data["action"] == "remove-admin":
+            admins = User.query.filter_by(admin=True).all()
+            if len(admins) >= 2:
+                user.admin = False
+                db.session.commit()
+            else:
+                flash("This is the last admin!") 
+                flash("Promote someone else to admin before removing this one.")
+        return redirect(url_for("main.adminProfile", user=user, form=form))
 
 @main.route("/play/<day>/<current_time>")
 def getUsersInTimeslot(day, current_time):
@@ -528,29 +564,6 @@ def getUsersInTimeslot(day, current_time):
 def play():
     return render_template("play.html")
 
-@main.route("/test/sort")
-def testSort():
-    ts = Timeslot.query.all()
-    print(ts)
-    sts = sorted(ts)
-    print(f"Sorted List:\r\n {sts} ")
-    return str(sts)
-
-@main.route("/test/delete")
-def testDelete():
-    Timeslot.query.delete()
-    db.session.commit()
-    ts = Timeslot.query.all()
-    d = user_timeslot.delete()
-    db.session.execute(d)
-    db.session.commit()
-    return f"Deleted: {str(ts)}"
-
-@main.route("/test/inter")
-def testinter():
-    ts = Timeslot.query.all()
-    return f"TS: {str(ts)}\r\n"
-
 @main.route("/userTable")
 @login_required
 @admin_required
@@ -560,10 +573,11 @@ def tables():
     # result = db.session.execute(s)
     return render_template("tables.html", users=users)
 
+
 @main.route("/schedule")
 def schedule():
     timeslots = Timeslot.query.all()
     events, startingHour, endingHour = makeCalendarEventsList(timeslots)
     print("\r\n\r\n\r\n EVENTS \r\n\r\n")
     print(events)
-    return render_template("schedule.html", eventsList=events, startingHour=startingHour, endingHour=endingHour)
+    return render_template("schedule.html", eventsList=events, startingHour=startingHour, endingHour=endingHour+1)

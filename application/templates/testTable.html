@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% set days = ["Monday","Tuesday","Wednesday","Thursday","Friday", "Saturday"] %}
+{% block content %}
+<section class="hero">
+        <div class="hero-body">
+            <p class="title">Timeslots</p>
+        </div>
+    </section>
+    <table class="table is-striped is-bordered is-fullwidth">
+        <thead>
+            <th>ID</th>
+            <th>Day</th>
+            <th>Startime</th>
+            <th>Endtime</th>
+            <th>A1</th>
+            <th>A2</th>
+            <th>A3</th>
+            <th>A4</th>
+            <th>A5</th>
+            <th>A6</th>
+        </thead>
+        <tbody>
+            {% for ts in timeslots %}
+                <tr>
+                    <th>{{ts.id}}</th>
+                    <td>{{days[ts.weekday]}}</td>
+                    <td>{{ts.startTime}}</td>
+                    <td>{{ts.endTime}}</td>
+                    {% for person in ts.users %}
+                    <td>{{person.firstName}}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
