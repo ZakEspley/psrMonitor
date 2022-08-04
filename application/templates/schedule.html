@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block extraImports %}
+<link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
+<script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
+<!-- <link rel="stylesheet" href="../static/css/bulma-radio-checkbox.min.css"> -->
+{% endblock %}
+
+{% block postContentImports %}
+
+{% endblock %}
+
+{% block content %}
+<div class="backgroundContainer content">
+    <p class="title has-text-centered">
+        Schedule
+    </p>
+    <div class="field">
+        <p class="control is-large has-icons-left">
+          <input id="filter" class="input is-large" type="text" placeholder="search">
+          <span class="icon is-small is-left">
+            <i class="fas fa-search"></i>
+          </span>
+        </p>
+    </div>
+
+    <div class="field">
+        <p class="control is-large">
+            <div class="is-inline">
+                
+                <label class="checkbox is-size-3" for="LAcb" style="background: #3a86ff;">
+                    <input id="LAcheckbox" name="LAcb" type="checkbox" class="checkbox-item" checked>
+                    LAs
+                </label>
+            </div>
+            <div class="is-inline">
+                <label class="checkbox is-size-3" for="TAcb" style="background: #ffbe0b;">
+                    <input id="TAcheckbox" name="TAcb" type="checkbox" class="checkbox-item" checked>
+                    TAs
+                </label>
+            </div>
+            <div class="is-inline">
+                <label class="checkbox is-size-3" for="Othercb" style="background: #ff006e;">
+                    <input id="Othercheckbox" name="Othercb" type="checkbox" class="checkbox-item" checked>
+                    Other
+                </label>
+                
+                
+            </div>
+        </p>
+    </div>
+
+    <div id="calendar" style="height: 600px; width:100%;"></div>
+    <script>
+        /* in the browser environment namespace */
+        const Calendar = tui.Calendar;
+        const container = document.getElementById('calendar');
+
+        const weekOptions = {
+            dayNames: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            showNowIndicator: false,
+            eventView: ['time'],
+            taskView: false,
+            hourStart: {{startingHour}},
+            hourEnd: {{endingHour}}
+        }
+        const fullOptions = {
+            useDetailPopup: true,
+            isReadOnly: true,
+            week: weekOptions,
+            calendars: [
+                {
+                    id: "TAcal",
+                    name: "TAs",
+                    backgroundColor: "#ffbe0b"
+                },
+                {
+                    id:"LAcal",
+                    name:"LAs",
+                    backgroundColor: "#3a86ff"
+                },
+                {
+                    id:"OtherCal",
+                    name:"Other",
+                    backgroundColor: "#ff006e"
+                }
+            ]
+        }
+        const calendar = new Calendar(container, fullOptions)
+        calendar.setOptions({
+            template: {
+              weekDayName(model) {
+                return `<span class="is-size-4 has-text-centered">${model.dayName}</span>`;
+              }
+            },
+          });
+        calendar.setOptions({
+        template: {
+            popupEdit() {
+                return "(Don't Click)";
+                },
+            },
+        });
+        calendar.setOptions({
+        template: {
+            time(event) {
+                return `<span>${event.title}</span>`;
+                },
+            },
+        });
+        let events = {{eventsList|tojson}}
+        calendar.setDate("2022-03-21")
+        calendar.createEvents(events)
+
+        let visibility = {
+            "LAcal": true,
+            "TAcal": true,
+            "Othercal": true
+        }
+
+        let filter = document.getElementById("filter")
+        filter.oninput = (e) => {
+            events2 = []
+            value = e.target.value.toLowerCase();
+            calendar.clear()
+            const regex = new RegExp("(?<!<\/?[^>]*|&[^;]*)(" + value +")", "gmi")
+
+            for (const event of events) {
+                if(regex.test(event.body) || regex.test(event.title)) {
+                    events2.push(event)
+                }
+            }
+            calendar.createEvents(events2)
+            for (cal in visibility) {
+                calendar.setCalendarVisibility(cal, visibility[cal])
+            }
+        }
+
+        const laCheckbox = document.getElementById("LAcheckbox")
+        const taCheckbox = document.getElementById("TAcheckbox")
+        const otherCheckbox = document.getElementById("Othercheckbox")
+
+        laCheckbox.onchange = (e) => {
+            calendar.setCalendarVisibility("LAcal", e.target.checked)
+            visibility.LAcal = e.target.checked
+        }
+
+        taCheckbox.onchange = (e) => {
+            calendar.setCalendarVisibility("TAcal", e.target.checked)
+            visibility.TAcal = e.target.checked
+        }
+
+        otherCheckbox.onchange = (e) => {
+            console.log(e)
+            calendar.setCalendarVisibility("Othercal", e.target.checked)
+            visibility.OtherCal = e.target.checked
+        }
+    </script>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block extraImports %}
+{% endblock %}
+
+{% block content %}
+{% set days = ["Monday","Tuesday","Wednesday","Thursday","Friday", "Saturday"] %}
+{% set shortDays = ["M", "T", "W", "R", "F", "S", "Su"]%}
+<div class="backgroundContainer content">
+    <section class="hero">
+        <div class="hero-body">
+            <p class="title">Users</p>
+        </div>
+    </section>
+    <table class="table is-striped is-bordered is-fullwidth is-hoverable">
+        <thead>
+            <th>ID</th>
+            <th>First</th>
+            <th>Last</th>
+            <th>Email</th>
+            <th>Position</th>
+            <th>Class</th>
+            <th>Pronouns</th>
+            <th>Admin</th>
+            <th>Picture</th>
+            <th>Timeslots</th>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr onclick="window.location='/users/{{user.id}}'">
+                    <th>{{user.id}}</th>
+                    <td>{{user.firstName}}</td>
+                    <td>{{user.lastName}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.position}}</td>
+                    <td>{{user.physicsClass}}</td>
+                    <td>{{user.pronouns}}</td>
+                    <td>{{user.admin}}</td>
+                    <td>{{user.profilePic}}</td>
+                    <td>
+                        {% for timeslot in user.timeslots %}
+                            {{shortDays[timeslot.weekday]}}|{{timeslot.startTime|ftime}}-{{timeslot.endTime|ftime}}&nbsp;
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- <section class="hero">
+        <div class="hero-body">
+            <p class="title">Timeslots</p>
+        </div>
+    </section>
+    <table class="table is-striped is-bordered is-fullwidth">
+        <thead>
+            <th>ID</th>
+            <th>Day</th>
+            <th>Startime</th>
+            <th>Endtime</th>
+            <th>A1</th>
+            <th>A2</th>
+            <th>A3</th>
+            <th>A4</th>
+            <th>A5</th>
+            <th>A6</th>
+        </thead>
+        <tbody>
+            {% for ts in timeslots %}
+                <tr>
+                    <th>{{ts.id}}</th>
+                    <td>{{days[ts.weekday]}}</td>
+                    <td>{{ts.startTime}}</td>
+                    <td>{{ts.endTime}}</td>
+                    {% for person in ts.users %}
+                    <td>{{person.firstName}}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <section class="hero">
+        <div class="hero-body">
+            <p class="title">Intermediate</p>
+        </div>
+    </section>
+    <table class="table is-striped is-bordered is-fullwidth">
+        <thead>
+            <th>User</th>
+            <th>Timeslot</th>
+        </thead>
+        <tbody>
+            {% for conn in connections %}
+                <tr>
+                    <td>{{conn.user_id}}</td>
+                    <td>{{conn.timeslot_id}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+        
+</div> -->
+
+
+{% endblock %}

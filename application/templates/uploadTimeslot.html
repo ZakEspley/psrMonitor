@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block extraImports %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script defer src="static/js/updateFilename.js"></script>
+<script defer src="static/js/makeSlideshowsFormChecking.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.1/papaparse.min.js" integrity="sha512-EbdJQSugx0nVWrtyK3JdQQ/03mS3Q1UiAhRtErbwl1YL/+e2hZdlIcSURxxh7WXHTzn83sjlh2rysACoJGfb6g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+
+{% block content %}
+<div class="backgroundContainer content">
+    <p class="title">
+        Upload Timeslot Spreadsheet
+    </p>
+    <div class="box">
+        <p class="block is-size-5">
+            Use this page to upload a CSV file that will add timeslots to all of the LAs and TAs.
+            This will then display the proper information at the right times on the TV in the PSR.
+        </p>
+
+        <p class="block is-size-6">
+            The CSV file must contain at least <strong>4</strong> columns with the names <strong>exactly</strong> the following:
+            <ul>
+                <li>Day</li>
+                <li>Start Time</li>
+                <li>End Time</li>
+                <li>Assistant 1</li>
+            </ul>
+            If you should so choose, you can have additional columns with the name "Assistant #" where you replace # with a number. You should have additional columns if you have more than one TA or LA in time slot at a time.
+        </p>
+
+        <p>Please note the following:</p>
+        <ul>
+            <li>
+                <span class="block tag is-warning is-large">                
+                    All times should use a 24 Hour clock convention
+                </span>
+            </li>
+            <li>
+                <span class="block tag is-warning is-large">                
+                    Assistant columns require @ucsb.edu emails only.
+                </span>
+            </li>
+            <li>
+                <span class="block tag is-danger is-large">
+                    <span class="icon-text">
+                        <span class="icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </span>
+                        <span>
+                            Anyone not in the list will have their timeslots deleted
+                        </span>
+                        <span class="icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </span>
+                    </span>
+                </span>
+            </li>
+        </ul>
+        
+        <p class="block is-size-6">
+            Below is an example version a CSV file.
+        </p>
+
+        
+    </div>
+
+    
+        <table class="table is-bordered is-striped">
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Assistant 1</th>
+                    <th>Assistant 2</th>
+                    <th>...</th>
+                    <th>Assistant N</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Monday</td>
+                    <td>13:30</td>
+                    <td>14:30</td>
+                    <td>zespley@ucsb.edu</td>
+                    <td>rshirinian@ucsb.edu</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Tuesday</td>
+                    <td>10:00</td>
+                    <td>11:30</td>
+                    <td>zespley@ucsb.edu</td>
+                    <td>rshirinian@ucsb.edu</td>
+                    <td>ppopescu@ucsb.edu</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    <hr>
+    <p class="is-size-4">Select CSV File to Upload</p>
+    <p id="errors" class="has-text-danger-dark has-text-weight-semibold is-size-5"></p>
+    <form action="{{url_for('main.uploadTimeslots')}}" method="post" enctype="multipart/form-data" id="form">
+        {{ form.csrf_token }}
+        <div class="field">
+            <div class="file is-large has-name" id="fileUpload">
+                <label class="file-label">
+                  {{ form.csvFile(class="file-input", id="file", accept="text/csv") }}
+                  <!-- <input class="file-input" type="file" name="timeCSV" accept="text/csv" id="file" required> -->
+                  <span class="file-cta">
+                    <span class="icon is-left">
+                        <span class="material-icons is-left">
+                            file_upload
+                        </span>
+                    </span>
+                    <span class="file-label">
+                      Select File...
+                    </span>
+                  </span>
+                  <span class="file-name">
+                    Selected File.csv
+                  </span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="field">
+            <div class="control"><input class="button is-primary" type="submit" value="Upload File"></div>
+        </div>
+    </form>
+    
+
+</div>
+
+
+{% endblock %}

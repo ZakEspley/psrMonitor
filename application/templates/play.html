@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSR</title>
+    <link rel="stylesheet"  href="../static/css/styles2.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <script src="https://kit.fontawesome.com/c06f1a9659.js" crossorigin="anonymous"></script>
+    <script src="../static/js/bulmaModal.js"></script>
+    <script src="../static/js/textFit.min.js"></script>
+    <!-- This is all of the CSS animations that are used when switching cards.
+    You can find the list of animations here: https://animate.style/
+    Note though that I am using version 4.1.1 so the set of animations you may find might be different
+    than those being displayed on the website when you visit if they update animations.-->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+</head>
+<body class="is-clipped">
+    <!-- This is my custom stylyings for placing the cards in the correct place with the size that I want
+        All of theese parameters can be adjusted as you would like. I would recommend opening Firefox or Chrome and
+        and inspecting the website to make adjustments as you see fit.-->
+    <style>
+      .left-card {
+        position: absolute;
+        top: 100px;
+        left: 150px;
+        width: 700px;
+      }
+
+      .right-card {
+        position: absolute;
+        top: 100px;
+        right: 150px;
+        width: 700px;
+      }
+
+      #one-card {
+        position: absolute;
+        top:100px;
+        left: calc(50vw - 350px);
+        width: 700px;
+      }
+    </style>
+    <!-- This is the background image. If you want to change it you just need to 
+        replace /static/imgs/background.png
+        It MUST be a .png and be in that exact location with the same name.  
+        -->
+    <div id="slideshow-background-image"></div>
+    <!-- If you want to remove the blur and the triangle pattern you can comment this 
+          "background-overlay" below out. (Ctrl+/ while on that line in most editors)
+          If you want to modify the overlay to suit your preferences please go to 
+          /static/css/styles2.css and edit the #background-overlay section-->
+    <div id="background-overlay"></div>
+    <!-- This is the image displayed when the slide is closed.
+          To change it, simply replace the file at /static/imgs/closed.png
+          it MUST be a .png, be in that exact location, and have the exact same name.-->
+    <div id="slideshow-closed-image" style="display: none; z-index:3;"></div>
+    <!-- This is the image displayed when switching timeslots in order to not have to
+          deal with a transisiton code between timeslots.-->
+    <div id="transition-image" style="display: none; z-index:3;"></div>
+    <!-- This is card displayed in the middle when there is an odd number of TAs/LAs in the
+        PSR.-->
+    
+    <div id="one-card" class="card one-card animate__slower" style="display: none;">
+      <div class="card-image">
+        <figure class="image is-1by1">
+          <img id="one-image" src="../static/imgs/profilePlaceHolder.png" alt="Placeholder image">
+        </figure>
+      </div>
+      <div class="card-content">
+        <div class="media">
+          <div class="media-content">
+            <p id="one-name" class="title is-1">John Smith H</p>
+            <p id="one-class" class="subtitle is-2">@johnsmith</p>
+            <p id="one-info" class="is-size-4">TA - He/him</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Left card for when there is two or more people to display -->
+    <div id="left-card" class="card left-card animate__slower" style="z-index:1;">
+      <div class="card-image">
+        <figure class="image is-1by1">
+          <img id="left-image" src="../static/imgs/profilePlaceHolder.png" alt="Placeholder image">
+        </figure>
+      </div>
+      <div class="card-content">
+        <div class="media">
+          <div class="media-content">
+            <p id="left-name" class="title is-1">John Smith 1</p>
+            <p id="left-class" class="subtitle is-2">@johnsmith</p>
+            <p id="left-info" class="is-size-4">TA - He/him</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- This is the second left card. For when there is two more people to display.
+          The second card has loaded with the next LA/TA so that we can animate between
+          the two smoothly. We will then load the next LA/TA into the first card and
+          the cycle repeats. -->
+    <div id="left2-card" class="card left-card animate__slower" style="z-index:2;">
+      <div class="card-image">
+        <figure class="image is-1by1">
+          <img id="left2-image" src="../static/imgs/profilePlaceHolder.png" alt="Placeholder image">
+        </figure>
+      </div>
+      <div class="card-content">
+        <div class="media">
+          <div class="media-content">
+            <p id="left2-name" class="title is-1">John Smith2</p>
+            <p id="left2-class" class="subtitle is-2">@johnsmith</p>
+            <p id="left2-info" class="is-size-4">TA - He/him</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Right card for when there is two or more people to display -->
+    <div id="right-card" class="card right-card animate__slower" style="z-index:1;">
+        <div class="card-image">
+          <figure class="image is-1by1">
+            <img id="right-image" src="../static/imgs/profilePlaceHolder.png" alt="Placeholder image">
+          </figure>
+        </div>
+        <div class="card-content">
+          <div class="media">
+            <div class="media-content">
+              <p id="right-name" class="title is-1">John SmithR</p>
+              <p id="right-class" class="subtitle is-2">@johnsmith</p>
+              <p id="right-info" class="is-size-4">TA - He/him</p>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- This is the second right card. For when there is two more people to display.
+          The second card has loaded with the next LA/TA so that we can animate between
+          the two smoothly. We will then load the next LA/TA into the first card and
+          the cycle repeats. -->
+    <div id="right2-card" class="card right-card animate__slower" style="z-index:2;">
+      <div class="card-image">
+        <figure class="image is-1by1">
+          <img id="right2-image" src="../static/imgs/profilePlaceHolder.png" alt="Placeholder image">
+        </figure>
+      </div>
+      <div class="card-content">
+        <div class="media">
+          <div class="media-content">
+            <p id="right2-name" class="title is-1">John SmithR2</p>
+            <p id="right2-class" class="subtitle is-2">@johnsmith</p>
+            <p id="right2-info" class="is-size-4">TA - He/him</p>
+          </div>
+        </div>
+      </div>
+  </div>
+
+
+    <script>
+        const BASE_URL = window.location
+        // This is a list of users we get from querying the database for the current timeslots
+        let users = []
+        // This will hold a list of things to animate.
+        let animateList = []
+        // This dict keeps a record of what animation classes are added to which cards.
+        let cardAnimations = {
+          "left-card":"a",
+          "left2-card":"a",
+          "right-card":"a",
+          "right2-card":"a",
+          "one-card": "a"
+        }
+        // Just a reference to the "PSR is closed" image
+        let closedImage = document.getElementById("slideshow-closed-image")
+        //Transistion image that is played when we are switching users.
+        let transisitonImage = document.getElementById("transition-image")
+
+        // This hides the element after the animation, which is good since it is a fade
+        // in and fade out animation. Then to play the animation again, one just needs
+        // to change the display style to "block"
+        transisitonImage.addEventListener("animationend", ev => {
+          ev.target.style.display = "none"
+        })
+        // This function hides the cards after the animation plays if it is is an
+        // exit animation. Some of the animations end strangely, so this just removes
+        // them from the view.
+        function hideAfterAnimation(ev) {
+          if (ev.target.className.includes("Out") || ev.target.className.includes("hinge")) {
+            ev.target.style.display = "none"
+          }
+        }
+
+        // Just getting variable for each card and a list of the all the cards for manipulation
+        let leftCard1 = document.getElementById("left-card")
+        let leftCard2 = document.getElementById("left2-card")
+        let rightCard1 = document.getElementById("right-card")
+        let rightCard2 = document.getElementById("right2-card")
+        let oneCard = document.getElementById("one-card")
+        let allCards = [leftCard1, leftCard2, rightCard1, rightCard2, oneCard]
+        
+        // This for loop makes it so each card runs the "hideAfterAnimation" function when
+        // its animation ends.
+        for (const c of allCards) {
+          c.addEventListener('animationend', hideAfterAnimation)
+        }
+
+        // This addes the "animate__animated" class to the card so that the animation will play
+        function animate() {
+          animateList.forEach(card => {
+            card.classList.add("animate__animated")
+          })
+          animateList = [] 
+        }
+
+        // This function is a way of updating a list of cards with new information.
+        // i.e. new picture, name, etc.
+        function updateCards(users, type) {
+          for (let index=0; index<users.length; index++) {
+            let user = users[index]
+            let card = users[index].card
+            updateCardInformation(user, card, type)
+          }
+        }
+
+        // This is used to compare the incoming users to the current users. 
+        // If the set of incoming users is the same as the previous it returns true, otherwise false.
+        // It just checks the lengths of the two lists, then ensures that each element in the list
+        // is matching if they are the same length.
+        function checkNewUsers(newUsers, oldUsers) {
+          //This is a bad function;
+          if (newUsers.length != oldUsers.length){
+            return false
+          }
+          const length = newUsers.length
+          let i = 0
+          for (const newuser of newUsers){
+            for (const olduser of oldUsers) {
+              if (newuser.user.email==olduser.user.email
+                  && newuser.startTime==olduser.startTime
+                  && newuser.endTime==olduser.endTime) {
+                    i = 0
+                    break
+              } else {
+                i++
+              }   
+            }
+            if (i == length) {
+              return false
+            }
+          }
+          return true
+        }
+
+        // Adds a new set of animations to the card. First it removes the "animate__animated"
+        // class so that the new animation doesn't immedately start then it will
+        // randomly pick an animation for the entrance or exit list and add that class
+        // to the card. Finally, adds the card to the animateList and then tracks which
+        // animation was added in the cardAnimations dict.
+        function updateAnimations(cards, type) {
+          for (card of cards){
+            card.classList.remove("animate__animated")
+            card.classList.remove(cardAnimations[card.id])
+            let animation
+            if (type=="entrance") {
+              animation = animationEntrances[Math.floor(Math.random()*animationEntrances.length)]
+            } else if (type=="exit") {
+              animation = animationExits[Math.floor(Math.random()*animationExits.length)]
+            } else {
+              return
+            }
+            cardAnimations[card.id] = animation
+            card.classList.add(animation)
+            animateList.push(card)
+          }
+        }
+
+        // This loops through a list of html elements and hides all of them
+        function hideCards(cards) {
+          let cardArray = Array.from(cards)
+          for (let c of cardArray) {
+            c.style.setProperty("display", "none")
+          }
+        }
+
+        // This loops through a list of html elements and shows all of them
+        function showCards(cards) {
+          let cardArray = Array.from(cards)
+          for (let c of cardArray) {
+            c.style.setProperty("display", "block")
+          }
+        }
+
+        // This is the function that actually updates each cards information. This only works
+        // on a single card.
+        function updateCardInformation(userInfo, card, animate=false) {
+            let user = userInfo.user
+            let img = card.firstElementChild.firstElementChild.firstElementChild
+            let name = card.lastElementChild.firstElementChild.firstElementChild.children[0]
+            let className = card.lastElementChild.firstElementChild.firstElementChild.children[1]
+            let info = card.lastElementChild.firstElementChild.firstElementChild.children[2]
+            let startTime = userInfo.startTime
+            let endTime = userInfo.endTime
+
+            if (user.profilePic) {
+              img.src = `${window.origin}/static/imgs/users/${user.email}.png`
+            } else {
+                img.src = `${window.origin}/static/imgs/profilePlaceHolder.png`
+            }
+            className.innerText = `${user.position} - ${user.physicsClass}`
+            info.innerText = `${convertToAMPM(startTime)} - ${convertToAMPM(endTime)}`
+            if (user.pronouns != "" && user.pronouns != null) {
+              name.innerText = `${user.firstName} ${user.lastName} - (${user.pronouns})`
+            } else {
+              name.innerText = `${user.firstName} ${user.lastName}`
+            }
+            if (animate){
+              updateAnimations([card], animate)
+            }
+        }
+
+        // This converts the 24 hour time to AM/PM for us American plebes
+        function convertToAMPM(timeString) {
+            let [hours, minutes] = timeString.split(":").map(num => parseInt(num,10))
+            let ampm
+            if (hours >= 12) {
+                ampm = "PM"
+                hours = hours%12
+            } else {
+                ampm = "AM"
+            }
+
+            if (hours==0) {
+                hours = 12  
+            }
+            
+            minutes = minutes.toString().padStart(2,"0")
+            return `${hours}:${minutes} ${ampm}`            
+        }
+
+        // This array stores the order of the current cards/users
+        let cardOrder = []
+        // This counter tracks how many times it is run through the switching the cards.
+        // It is often modulated by the length of cardOrder and is kind of used as an index.
+        let counter = 0
+
+        // This function is run every few minutes and queries the database with the current
+        // time, asking for a list of users that should be in the PSR at that time.
+        // It compares the new list of users (stored in the "data" variable) with the old 
+        // list of users in the "users" variable. It compares the two lists with the 
+        // "checkNewUsers" function. If there is no difference (i.e. checkNewUsers returns true)
+        // the rest of this function is skipped. If there is a difference then we build
+        // a new card order and store that in "cardOrder" and display the transistion image
+        // and finally reset the "counter" to zero
+        async function getUsers() {
+          let now = new Date()
+          let weekday = now.getDay()-1
+          let hours = now.getHours().toString().padStart(2,"0")
+          let minutes = now.getMinutes().toString().padStart(2,"0")
+          let time = `${hours}:${minutes}`
+
+          await fetch(BASE_URL + `/${weekday}/${time}`)
+              .then(response => response.json())
+              .then(data => {
+                  if (checkNewUsers(data,users)) {
+                    return
+                  }
+                  users = JSON.parse(JSON.stringify(data))
+                  cardOrder = buildOrder(JSON.parse(JSON.stringify(data)))
+                  transisitonImage.style.display = "block"
+                  counter = 0
+                  hideCards(allCards)
+              })
+        }
+
+        // List of cards that are side by side for looping in chunks of 2.
+        let sideBySideCards = [leftCard1, rightCard1, leftCard2, rightCard2]
+
+        // This function generates the order of the cards given a new set of users.
+        // It loops through all of the users and ties one of the five cards to that user.
+        // It typically works in chunks of two (i.e. adding leftCard1 to a user then rightCard1
+        // to the next user) unless there are an odd number of users, then for the last user it
+        // assign to them the oneCard
+        function buildOrder(data) {
+          let order = []
+          for (let i=0; i<data.length; i++) {
+            if (data.length-i==1){
+              data[i]['card'] = oneCard
+              order.push(data[i])
+            } else {
+              data[i]['card'] = sideBySideCards[i%4]
+              data[i+1]['card'] = sideBySideCards[(i+1)%4]
+              order.push(data[i])
+              order.push(data[i+1])
+              i = i+1
+            }
+          }
+          return order
+        }
+
+        // This is a list of the last cards that were displayed so that we can
+        // assign an exit animation to them.
+        let priorCards = []
+
+        // This function handles the switching of cards and runs every 15 seconds.
+        // If there is no one in the PSR it will display the "closedImage".
+        // If there are 2 or less people in the PSR it will put their cards on the
+        // monitor, but it will never animate them in any way.
+        // If there are 3 or more users, it will cycle between the users by displaying
+        // two users at a time (unless there is an odd number of users, then it will 
+        // display the one user centered and alone), animating them leaving, and animating
+        // a the new users onto the screen.
+        function changeUsers() {
+          if (cardOrder.length <= 2 && counter > 0) {
+            return
+          }
+          if (cardOrder.length == 0) {
+            closedImage.style.display = "block"
+            return
+          }
+          closedImage.style.display = "none"
+          updateAnimations(priorCards, "exit")
+          priorCards = []
+          let i = counter%cardOrder.length
+          if (cardOrder.length-i==1){
+            updateCards([cardOrder[i]], "entrance")
+            showCards([cardOrder[i].card])
+            priorCards.push(cardOrder[i].card)
+            counter = counter + 1
+          } else {
+            updateCards([cardOrder[i], cardOrder[i+1]], "entrance")
+            showCards([cardOrder[i].card, cardOrder[i+1].card])
+            priorCards.push(cardOrder[i].card, cardOrder[i+1].card)
+            counter = counter + 2
+          }
+          animate()
+        }
+
+        getUsers()
+        changeUsers()
+        setInterval(getUsers, 90001)
+        setInterval(changeUsers, 15000)
+
+        // List of entrance animations
+        let animationEntrances = [
+            "animate__backInDown",
+            "animate__backInLeft",
+            "animate__backInRight",
+            "animate__backInUp",
+            "animate__bounceIn",
+            "animate__bounceInDown",
+            "animate__bounceInLeft",
+            "animate__bounceInRight",
+            "animate__bounceInUp",
+            "animate__fadeIn",
+            "animate__fadeInDown",
+            "animate__fadeInDownBig",
+            "animate__fadeInLeft",
+            "animate__fadeInLeftBig",
+            "animate__fadeInRight",
+            "animate__fadeInRightBig",
+            "animate__fadeInUp",
+            "animate__fadeInUpBig",
+            "animate__fadeInTopLeft",
+            "animate__fadeInTopRight",
+            "animate__fadeInBottomLeft",
+            "animate__fadeInBottomRight",
+            "animate__flipInX",
+            "animate__flipInY",
+            "animate__lightSpeedInRight",
+            "animate__lightSpeedInLeft",
+            "animate__rotateIn",
+            "animate__rotateInDownLeft",
+            "animate__rotateInDownRight",
+            "animate__rotateInUpLeft",
+            "animate__rotateInUpRight",
+            "animate__jackInTheBox",
+            "animate__rollIn",
+            "animate__zoomIn",
+            "animate__zoomInDown",
+            "animate__zoomInLeft",
+            "animate__zoomInRight",
+            "animate__zoomInUp",
+            "animate__slideInDown",
+            "animate__slideInLeft",
+            "animate__slideInRight",
+            "animate__slideInUp",
+        ]
+
+        // List of exit animations.
+        let animationExits = [
+            "animate__backOutDown",
+            "animate__backOutLeft",
+            "animate__backOutRight",
+            "animate__backOutUp",
+            "animate__bounceOut",
+            "animate__bounceOutDown",
+            "animate__bounceOutLeft",
+            "animate__bounceOutRight",
+            "animate__bounceOutUp",
+            "animate__fadeOut",
+            "animate__fadeOutDown",
+            "animate__fadeOutDownBig",
+            "animate__fadeOutLeft",
+            "animate__fadeOutLeftBig",
+            "animate__fadeOutRight",
+            "animate__fadeOutRightBig",
+            "animate__fadeOutUp",
+            "animate__fadeOutUpBig",
+            "animate__fadeOutTopLeft",
+            "animate__fadeOutTopRight",
+            "animate__fadeOutBottomLeft",
+            "animate__fadeOutBottomRight",
+            "animate__flipOutX",
+            "animate__flipOutY",
+            "animate__lightSpeedOutRight",
+            "animate__lightSpeedOutLeft",
+            "animate__rotateOut",
+            "animate__rotateOutDownLeft",
+            "animate__rotateOutDownRight",
+            "animate__rotateOutUpLeft",
+            "animate__rotateOutUpRight",
+            "animate__hinge",
+            "animate__rollOut",
+            "animate__zoomOut",
+            "animate__zoomOutDown",
+            "animate__zoomOutLeft",
+            "animate__zoomOutRight",
+            "animate__zoomOutUp",
+            "animate__slideOutDown",
+            "animate__slideOutLeft",
+            "animate__slideOutRight",
+            "animate__slideOutUp",
+        ]
+    </script>
+
+
+</body>
+</html>

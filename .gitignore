@@ -1,5 +1,6 @@
 __pycache__/main.cpython-39.pyc
 .vscode
+*/__pycache__
 __pycache__
 *.pyc
 
@@ -66,3 +67,4 @@ __pycache__
 # 3D Images
 *.3dm
 *.max
+client_secret.json

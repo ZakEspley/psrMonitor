@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block extraImports %}
+{% endblock %}
+
+{% block content %}
+<div class="backgroundContainer content">
+    {% if review %}
+    <p class="title">
+        Uploaded Results
+    </p>
+    <p>
+        List of users just added. Please review.
+    </p>
+    {% else %}
+    <p class="title">
+        Users
+    </p>
+    {% endif %}
+    <hr>
+        {% for user in users %}
+            {% if loop.index0%3 == 0 %}
+            <div class="columns is-multiline is-scrollable">
+            {% endif %}
+                <div class="column is-4">
+                    <a href="/users/{{ user.id }}">
+                        <div class="card">
+                            <div class="card-image">
+                                <figure class="image">
+                                    {% if user.profilePic %}
+                                        <img src="../static/imgs/users/{{ user.email }}.png" style="margin-top:1em;">
+                                    {% else %}
+                                        <img src="../static/imgs/profilePlaceHolder128.png" style="margin-top:1em;">
+                                    {% endif %}
+                                </figure>
+                            </div>
+                            <div class="card-content">
+                                <div class="media">
+                                    <!-- <div class="media-left">
+                                    <figure class="image is-48x48">
+                                        <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+                                    </figure>
+                                    </div> -->
+                                    <div class="media-content">
+                                    {% if not user.pronouns %}
+                                        <p class="title is-4">{{ user.firstName }} {{  user.lastName  }} (No Pronouns)</p>
+                                    {% else %}
+                                        <p class="title is-4">{{ user.firstName }} {{  user.lastName  }} ({{ user.pronouns }})</p>
+                                    {% endif %}
+                                        <p class="subtitle is-5">{{ user.class }} {{ user.position }} </p>
+                                    <p class="is-6">{{ user.email }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% if loop.index0%3 == 2 or loop.index == users|length %}
+            </div>
+            {% endif %}  
+        {% endfor %}
+</div>
+
+
+{% endblock %}

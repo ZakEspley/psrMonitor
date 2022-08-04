@@ -1,0 +1,249 @@
+{% extends "userBase.html" %}
+
+{% block extraImports %}
+<link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
+<script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
+{% endblock %}
+
+{% block postContentImports %}
+<script src="../static/js/profileForm.js"></script>
+<script src="../static/js/updateFilename.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="backgroundContainer content">
+    <div class="box is-black pt-6 is-fullwidth">
+        <article class="media">
+            <figure class="media-left">
+                <p class="image is-128x128 profile-img">
+                    {% if user.profilePic %}
+                        <img src="../static/imgs/users/{{ user.email }}.png">
+                    {% else %}
+                        <img src="../static/imgs/profilePlaceHolder128.png" alt="" srcset="">
+                    {% endif %}
+                    <span id="picDisplay" class="icon level-item is-clickable is-overlay hidden-icon">
+                        <i class="fas fa-pencil-alt fa-8x"></i>
+                    </span> 
+                </p>
+            </figure>
+            <div class="content">
+                <div class="media-content">
+                    <div id="nameDisplay" class="level">
+                        <p id="nameEdit" class="is-size-1 level-item is-clickable" style="padding-top: 4.2rem; margin-bottom: 0;">
+                            {% if user.firstName %}
+                                {{ user.firstName }} {{ user.lastName }}
+                            {% else %}
+                                No Name
+                            {% endif %}
+                        </p>
+                        <span class="icon level-item hidden-icon ">
+                            <i class="fas fa-pencil-alt"></i>
+                        </span> 
+                         
+                    </div>
+                    <form id="nameForm" action="{{url_for('main.profile')}}" hidden style="padding-top: 4.2rem;" method="post">
+                        {{ form.csrf_token }}
+                        <div class="level">
+                            <div class="level-item">
+                                <div class="field">
+                                    <p class="control">
+                                        {% if user.firstName %}
+                                            {{form.firstName(class="input is-large", placeholder=user.firstName)}}
+                                        {% else %}
+                                            {{form.firstName(class="input is-large", placeholder="First Name")}}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="level-item">
+                                <div class="field">
+                                    <p class="control">
+                                        {% if user.lastName %}
+                                            {{form.lastName(class="input is-large", placeholder=user.lastName)}}
+                                        {% else %}
+                                            {{form.lastName(class="input is-large", placeholder="Last Name")}}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="level-item">
+                                <div class="field">
+                                    <input type="submit" class="button is-primary is-size-4" value="Change Name">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                                                  
+                </div>
+            </div>
+        </article>
+
+        <form hidden action="{{url_for('main.profile')}}" method="post" enctype="multipart/form-data" id="picForm">
+            {{ form.csrf_token }}
+            <div class="field">
+                <div class="file is-large has-name" id="fileUpload">
+                    <label class="file-label">
+                      {{ form.profilePic(class="file-input", accept="image/*", id="file") }}
+                      <!-- <input class="file-input" type="file" name="images" accept="image/*" id="file" required> -->
+                      <span class="file-cta">
+                        <span class="icon is-left">
+                            <i class="fas fa-file-upload"></i>
+                        </span>
+                        <span class="file-label">
+                          Select Image...
+                        </span>
+                      </span>
+                      <span class="file-name">
+                        Selected Image
+                      </span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="control"><input class="button is-primary" type="submit" value="Upload File"></div>
+            </div>
+        </form>
+    </div>
+        
+    <hr style="margin-top: 0;">
+
+    
+    <div class="notification is-size-3">
+        <p>
+            <strong>Pronouns: </strong> 
+            <span id="pronounDisplay" class="is-clickable editable">
+                {% if user.pronouns %}
+                    {{ user.pronouns }}
+                {% else %}
+                    No Pronouns
+                {% endif %}         
+                <sup>
+                    <span class="icon-text">
+                        <span class="icon hidden-icon ">
+                            <i class="fas fa-pencil-alt fa-1x"></i>
+                        </span> 
+                    </span>
+                </sup>
+            </span>
+            <form id="pronounForm" hidden action="{{url_for('main.profile')}}" method="post">
+                {{ form.csrf_token }}
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <div class="field">
+                                <p class="control">
+                                    {% if user.pronouns %}
+                                        {{form.pronouns(class="input is-large", placeholder=user.pronouns)}}
+                                    {% else %}
+                                        {{form.pronouns(class="input is-large", placeholder="they/them")}}
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="level-item">
+                            <div class="field">
+                                <input type="submit" class="button is-primary is-size-4" value="Change Pronouns">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </p>
+
+             
+        <p>
+            <strong>Position: </strong>
+            <span class="editable">
+                {% if user.position %}
+                    {{ user.position }}
+                {% else %}
+                    Contact PSR Coordinator
+                {% endif %}
+                <sup>
+                    <span class="icon-text">
+                        <span class="icon hidden-icon ">
+                            <i class="fas fa-ban"></i>
+                        </span> 
+                    </span>
+                </sup>        
+            </span>
+        </p>
+
+        <p>
+            <strong>Class: </strong>
+            <span class="editable">
+                {% if user.physicsClass %}
+                    {{ user.physicsClass }}
+                {% else %}
+                    Contact PSR Coordinator
+                {% endif %}
+                <sup>
+                    <span class="icon-text">
+                        <span class="icon hidden-icon ">
+                            <i class="fas fa-ban"></i>
+                        </span> 
+                    </span>
+                </sup>      
+            </span>
+        </p>
+    </div>
+
+    <hr>
+    <p class="is-size-3">
+        Schedule
+    </p>
+    <div id="calendar" style="height: 500px;"></div>
+    <script>
+        /* in the browser environment namespace */
+        const Calendar = tui.Calendar;
+        const container = document.getElementById('calendar');
+
+        const weekOptions = {
+            dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            showNowIndicator: false,
+            eventView: ['time'],
+            taskView: false,
+            hourStart: {{startingHour}},
+            hourEnd: {{endingHour}}
+        }
+        const fullOptions = {
+            useDetailPopup: true,
+            isReadOnly: true,
+            week: weekOptions,
+            calendars: [
+                {
+                    id: "TAcal",
+                    name: "TAs",
+                    backgroundColor: "#ffbe0b"
+                },
+                {
+                    id:"LAcal",
+                    name:"LAs",
+                    backgroundColor: "#3a86ff"
+                },
+                {
+                    id:"OtherCal",
+                    name:"Other",
+                    backgroundColor: "#ff006e"
+                }
+            ]
+        }
+        const calendar = new Calendar(container, fullOptions)
+        calendar.setOptions({
+            template: {
+              weekDayName(model) {
+                return `<span class="is-size-2">${model.dayName}</span>`;
+              },
+            },
+          });
+        let events = {{eventslist|tojson}}
+        console.log(events)
+        calendar.setDate("2022-03-21")
+        calendar.createEvents(events)
+    </script>
+
+</div>
+
+
+{% endblock %}

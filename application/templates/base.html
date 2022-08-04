@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"  href="../static/css/styles2.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons"> -->
+    <script src="https://kit.fontawesome.com/c06f1a9659.js" crossorigin="anonymous"></script>
+    <script src="../static/js/bulmaModal.js"></script>
+    {% block extraImports %}
+
+    {% endblock %}
+    <title>PSR Monitor Controller</title>
+</head>
+<body class="is-clipped">
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div id="messages" class="modal is-active">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+          <div class="box">
+            {% for message in messages %}
+              <p class="is-size-4 has-text-centered">{{ message }}</p>
+            {% endfor %}
+          </div>
+            
+          
+      </div>
+      <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+    {% endif %}
+  {% endwith %}
+
+    <div id="background-image"></div>
+    <div id="background-overlay"></div>
+    <nav class="navbar is-black" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="/profile">
+            <img src="../static/imgs/logo.png" width="60" height="28">
+          </a>
+      
+          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+      
+        <div id="navbarBasicExample" class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item" href="/adminProfile">
+              Home
+            </a>
+            
+            <a class="navbar-item" href="/users">
+                View Users
+            </a>
+
+            <a class="navbar-item" href="/userTable">
+              User Table
+          </a>
+
+            <a class="navbar-item" href="/addUsers">
+                Add Users
+            </a>
+
+            <a href="/schedule" class="navbar-item">
+              View Schedule
+            </a>
+
+            <a class="navbar-item" href="/uploadTimeslots">
+                Upload Timeslots
+            </a>
+
+            <a class="navbar-item" href="/play">
+                Show Slideshow
+            </a>
+
+            <!-- <a class="navbar-item">
+                Add Slides
+            </a> -->
+
+          </div>
+      
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <div class="buttons">
+                <a class="button is-light" href="/logout">
+                  Log Out
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+          // Get all "navbar-burger" elements
+          const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+        
+          // Add a click event on each of them
+          $navbarBurgers.forEach( el => {
+            el.addEventListener('click', () => {
+        
+              // Get the target from the "data-target" attribute
+              const target = el.dataset.target;
+              const $target = document.getElementById(target);
+        
+              // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+              el.classList.toggle('is-active');
+              $target.classList.toggle('is-active');
+        
+            });
+          });
+        
+        });
+      </script>
+    <div class="container">
+        {% block content %}
+    
+        {% endblock %}
+    </div>
+    
+    {% block postContentImports %}
+
+    {% endblock %}
+    
+</body>
+</html>
