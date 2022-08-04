@@ -3,5 +3,6 @@ __pycache__/main.cpython-39.pyc
 */__pycache__
 __pycache__
 *.pyc
-
+/application/static/imgs/tmp/*
+/application/static/imgs/users/*
 client_secret.json
