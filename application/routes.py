@@ -575,7 +575,7 @@ def tables():
     return render_template("tables.html", users=users)
 
 
-@main.route("/schedule")
+@main.route("/schedule", methods=["GET", "POST"])
 def schedule():
     timeslots = Timeslot.query.all()
     events, startingHour, endingHour = makeCalendarEventsList(timeslots)
