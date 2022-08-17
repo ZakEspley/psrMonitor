@@ -579,4 +579,4 @@ def tables():
 def schedule():
     timeslots = Timeslot.query.all()
     events, startingHour, endingHour = makeCalendarEventsList(timeslots)
-    return render_template("schedule.html", eventsList=events, startingHour=startingHour, endingHour=endingHour+1)
+    return render_template("schedule.html", eventsList=events, startingHour=startingHour-1, endingHour=endingHour+1)
