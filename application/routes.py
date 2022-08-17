@@ -165,7 +165,7 @@ def addUsers():
                 db.session.add(user)
             users.append(user)
             db.session.commit()
-        return redirect(url_for("main.users", users=users, review=True))
+        return redirect(url_for("main.usersnew", users=users))
 
 @main.route("/users")
 @login_required
@@ -173,6 +173,12 @@ def addUsers():
 def users():
     users = User.query.all()
     return render_template("users.html", users=users, review=False)
+
+@main.route("/users/new")
+@login_required
+@admin_required
+def usersnew(users):
+    return render_template("users.html", users=users, review=True)
 
 @main.route("/users/<int:user_id>", methods=["GET", "POST"])
 @login_required
@@ -221,8 +227,8 @@ def user(user_id):
                 print("Flashing Message")
                 flash("This is the last admin!") 
                 flash("Promote someone else to admin before removing this one.")
-            redirect(url_for("main.adminProfile", user=user, form=form))
-        return redirect(url_for("main.adminProfile", user=user, form=form, startingHour=startingHour, endingHour=endingHour+1, eventslist=events))
+            redirect(url_for("main.user", user_id=user.id))
+        return redirect(url_for("main.user", user_id=user.id))
     
 @main.route("/uploadTimeslots", methods=["GET", "POST"])
 @login_required
@@ -392,9 +398,6 @@ def uploadTimeslots():
                     else:
                         ts.users.remove(user)
                         db.session.commit()
-
-        timeslots = Timeslot.query.all()
-        events, startingHour, endingHour = makeCalendarEventsList(timeslots)
             
         # IF we ran into any errors processing the data, send the feedback to the user.
         if len(badEmails)+len(noUsers)+len(badDays)+len(badTimes) != 0:
@@ -501,7 +504,7 @@ def profile():
                 flash("Multiple faces found in this image!")
                 flash("Your image must be a headshot of JUST you.")
                 flash("If this is in error please contact the PSR Coordinator for help or try a different image.")
-        return redirect(url_for("main.profile", user=user, form=form))
+        return redirect(url_for("main.profile"))
 
 @main.route("/adminProfile", methods=["GET", "POST"])
 @login_required
@@ -541,7 +544,7 @@ def adminProfile():
             else:
                 flash("This is the last admin!") 
                 flash("Promote someone else to admin before removing this one.")
-        return redirect(url_for("main.adminProfile", user=user, form=form))
+        return redirect(url_for("main.adminProfile"))
 
 @main.route("/play/<day>/<current_time>")
 def getUsersInTimeslot(day, current_time):
