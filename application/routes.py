@@ -408,7 +408,7 @@ def uploadTimeslots():
         for time in badTimes:
             flash(f"Sorry, I don't understand the time: {time}")
         
-        return redirect(url_for("main.schedule"), code=307)
+        return redirect(url_for("main.schedule"))
 
 @main.get("/manuallyAddHostsImages")
 def get_manually_add_host_image():
