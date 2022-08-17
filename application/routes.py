@@ -166,7 +166,7 @@ def addUsers():
             users.append(user)
             db.session.commit()
         user_list = [user.id for user in users]
-        return redirect(url_for("main.usersnew", user_list=user_list))
+        return redirect(url_for("main.newusers", user_list=user_list))
 
 @main.route("/users")
 @login_required
@@ -175,10 +175,10 @@ def users():
     users = User.query.all()
     return render_template("users.html", users=users, review=False)
 
-@main.route("/users/new/<user_list>")
+@main.route("/newusers/<user_list>")
 @login_required
 @admin_required
-def usersnew(user_list):
+def newusers(user_list):
     user_list = user_list.strip("[]").split(",")
     users = User.query.filter(User.id.in_(user_list)).all()
     return render_template("users.html", users=users, review=True)
